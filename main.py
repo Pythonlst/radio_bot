@@ -1,5 +1,6 @@
 # капаем библиотеки
 import logging
+import requests
 from telegram.ext import Application, MessageHandler, filters, CommandHandler, CallbackQueryHandler
 from telegram import ReplyKeyboardMarkup, ReplyKeyboardRemove, InlineKeyboardMarkup, InlineKeyboardButton, Update
 
@@ -14,20 +15,24 @@ class Bot:
         application.add_handler(CommandHandler("start", self.start))
         application.add_handler(CommandHandler("help", self.help))
         application.add_handler(CommandHandler("close", self.close_keyboard))
+        application.add_handler(CommandHandler("open", self.open_keyboard))
         application.add_handler(CommandHandler("forum", self.open_site))
+        application.add_handler(CommandHandler("random_meme", self.random_meme))
 
         text_handler = MessageHandler(filters.TEXT & ~filters.COMMAND, self.echo)
         application.add_handler(text_handler)
 
-        # создание клавы
-        btn_keyboard = [
-            ['/start', '/help'], ['/close', '/forum']
+        # создание главной клавы
+        self.btn_keyboard = [
+            ['/help'], ['/close', '/forum', '/random_meme']
         ]
-        self.markup_btns = ReplyKeyboardMarkup(btn_keyboard, one_time_keyboard=False, resize_keyboard=True)
+        self.markup_btns = ReplyKeyboardMarkup(self.btn_keyboard, one_time_keyboard=False, resize_keyboard=True)
 
         # создание inline клавы
         inline_keyboard = [
-            [InlineKeyboardButton('форум радиоэлектроников', url='https://go-radio.ru/start.html')]
+            [InlineKeyboardButton('форум радиоэлектроников', url='https://go-radio.ru/start.html')],
+            [InlineKeyboardButton('канал про проектирование на ардуино Alex Giver', url='https://www.youtube.com/@AlexGyverShow')],
+            [InlineKeyboardButton('канал про электронику HI-DEV', url='https://www.youtube.com/channel/UCY6A_tZAikULMr46WlfntRw')]
                            ]
         self.url_btns = InlineKeyboardMarkup(inline_keyboard)
 
@@ -54,16 +59,24 @@ class Bot:
 
     async def close_keyboard(self, update, context):
         await update.message.reply_text(
-            "Ok",
-            reply_markup=ReplyKeyboardRemove()
+            "закрытие меню",
+            reply_markup=ReplyKeyboardMarkup([['/open']], one_time_keyboard=False, resize_keyboard=True)
+        )
+
+    async def open_keyboard(self, update, context):
+        await update.message.reply_text(
+            "открытие меню",
+            reply_markup=ReplyKeyboardMarkup(self.btn_keyboard, one_time_keyboard=False, resize_keyboard=True)
         )
 
     async def open_site(self, update, context):
         query = update.callback_query
         await update.message.reply_text("сайты для ознакомления с темой:", reply_markup=self.url_btns)
 
-
-
+    async def random_meme(self, update, context):
+        await update.message.reply_text(
+            "меме"
+        )
 
 
 
