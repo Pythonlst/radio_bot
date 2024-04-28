@@ -2,25 +2,26 @@
 import logging
 import requests
 from telegram.ext import Application, MessageHandler, filters, CommandHandler, CallbackQueryHandler
-from telegram import ReplyKeyboardMarkup, ReplyKeyboardRemove, InlineKeyboardMarkup, InlineKeyboardButton, Update
+from telegram import ReplyKeyboardMarkup, InlineKeyboardMarkup, InlineKeyboardButton, request
+from random_picture import take_image
 
 
 class Bot:
     def __init__(self):
         # настройка бота
-        application = Application.builder().token('7098727755:AAHOKBBBIgYnudjOmHeu4_7RzkE4prgVkJs').build()
+        self.application = Application.builder().token('7098727755:AAHOKBBBIgYnudjOmHeu4_7RzkE4prgVkJs').build()
 
-        application.add_handler(CallbackQueryHandler(self.open_site))
+        self.application.add_handler(CallbackQueryHandler(self.open_site))
 
-        application.add_handler(CommandHandler("start", self.start))
-        application.add_handler(CommandHandler("help", self.help))
-        application.add_handler(CommandHandler("close", self.close_keyboard))
-        application.add_handler(CommandHandler("open", self.open_keyboard))
-        application.add_handler(CommandHandler("forum", self.open_site))
-        application.add_handler(CommandHandler("random_meme", self.random_meme))
+        self.application.add_handler(CommandHandler("start", self.start))
+        self.application.add_handler(CommandHandler("help", self.help))
+        self.application.add_handler(CommandHandler("close", self.close_keyboard))
+        self.application.add_handler(CommandHandler("open", self.open_keyboard))
+        self.application.add_handler(CommandHandler("forum", self.open_site))
+        self.application.add_handler(CommandHandler("random_meme", self.random_meme))
 
         text_handler = MessageHandler(filters.TEXT & ~filters.COMMAND, self.echo)
-        application.add_handler(text_handler)
+        self.application.add_handler(text_handler)
 
         # создание главной клавы
         self.btn_keyboard = [
@@ -43,7 +44,7 @@ class Bot:
         logger = logging.getLogger(__name__)
 
         #включение основного цикла
-        application.run_polling()
+        self.application.run_polling()
 
     async def start(self, update, context):
         self.user = update.effective_user
@@ -74,9 +75,13 @@ class Bot:
         await update.message.reply_text("сайты для ознакомления с темой:", reply_markup=self.url_btns)
 
     async def random_meme(self, update, context):
-        await update.message.reply_text(
-            "меме"
-        )
+        url = take_image('image')
+        print(update)
+        print(update.message.chat.id)
+        self.application.drop_chat_data(url, chat_id=str(update.message.chat.id))
+        #await update.message.reply_text(
+        #    "меме"
+        #)
 
 
 
