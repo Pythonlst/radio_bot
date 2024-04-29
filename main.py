@@ -1,6 +1,5 @@
 # капаем библиотеки
 import logging
-import requests
 from telegram.ext import Application, MessageHandler, filters, CommandHandler, CallbackQueryHandler
 from telegram import ReplyKeyboardMarkup, InlineKeyboardMarkup, InlineKeyboardButton, request
 from random_picture import take_image

@@ -2,6 +2,7 @@ import requests
 import json
 from PIL import Image
 from io import BytesIO
+from csv import insert
 
 
 api_img = 'https://api.unsplash.com/photos/random?client_id=5mMofpL6vwFnjXrcJDWvSGGutw3A4kGMZNfVeavueaQ'
@@ -19,6 +20,7 @@ def take_image(type):
         else:
             with open('data/latest/latest_unsplash.json', 'w') as site:
                 json.dump(response_img, site, indent='    ', separators=(',', ': '))
+            insert(response_img['id'], response_img['slug'], response_img['description'], response_img['updated_at'])
             response_img = response_img['urls']['small']
             img = Image.open(BytesIO(requests.get(response_img).content))
             img.save('data/latest/latest.png', 'PNG')
