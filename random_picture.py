@@ -19,7 +19,7 @@ def take_image(type):
         else:
             with open('data/latest/latest_unsplash.json', 'w') as site:
                 json.dump(response_img, site, indent='    ', separators=(',', ': '))
-            response_img = response_img['urls']['full']
+            response_img = response_img['urls']['small']
             img = Image.open(BytesIO(requests.get(response_img).content))
             img.save('data/latest/latest.png', 'PNG')
             return response_img
@@ -35,3 +35,4 @@ def take_image(type):
             response_gif = requests.get(response_gif['data']['images']['original']['url']).content
             gif = Image.open(BytesIO(response_gif))
             gif.save('data/latest/latest.gif', 'GIF')
+            return response_gif

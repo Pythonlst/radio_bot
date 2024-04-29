@@ -18,14 +18,14 @@ class Bot:
         self.application.add_handler(CommandHandler("close", self.close_keyboard))
         self.application.add_handler(CommandHandler("open", self.open_keyboard))
         self.application.add_handler(CommandHandler("forum", self.open_site))
-        self.application.add_handler(CommandHandler("random_meme", self.random_meme))
+        self.application.add_handler(CommandHandler("random_image", self.random_image))
 
         text_handler = MessageHandler(filters.TEXT & ~filters.COMMAND, self.echo)
         self.application.add_handler(text_handler)
 
         # создание главной клавы
         self.btn_keyboard = [
-            ['/help'], ['/close', '/forum', '/random_meme']
+            ['/help'], ['/close', '/forum', '/random_image']
         ]
         self.markup_btns = ReplyKeyboardMarkup(self.btn_keyboard, one_time_keyboard=False, resize_keyboard=True)
 
@@ -74,11 +74,11 @@ class Bot:
         query = update.callback_query
         await update.message.reply_text("сайты для ознакомления с темой:", reply_markup=self.url_btns)
 
-    async def random_meme(self, update, context):
+    async def random_image(self, update, context):
         url = take_image('image')
         print(update)
         print(update.message.chat.id)
-        self.application.drop_chat_data(url, chat_id=str(update.message.chat.id))
+        await context.bot.send_photo(update.message.chat.id, url)
         #await update.message.reply_text(
         #    "меме"
         #)
