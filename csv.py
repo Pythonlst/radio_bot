@@ -1,20 +1,22 @@
 import sqlite3
 
 
-def insert(dev_id, name, join_date, description):
+def insert(id, name, date, description, url, dowload):
     try:
-        sqlite_connection = sqlite3.connect('data/sqlite.db')
+        sqlite_connection = sqlite3.connect('data/random_data.db')
         cursor = sqlite_connection.cursor()
         print("Подключен к SQLite")
 
-        sqlite_insert_with_param = """INSERT INTO users
-                              (id, name, date, description)
-                              VALUES (?, ?, ?, ?);"""
-
-        data_tuple = (dev_id, name, join_date, description)
+        sqlite_insert_with_param = """CREATE TABLE IF NOT EXISTS 
+                                                    pictures(id, name, date, description, url, download);"""
+        cursor.execute(sqlite_insert_with_param)
+        sqlite_connection.commit()
+        sqlite_insert_with_param = '''INSERT INTO pictures(id, name, date, description, url, download)
+                                                                                VALUES(?, ?, ?, ?, ?, ?);'''
+        data_tuple = (id, name, date, description, url, dowload)
         cursor.execute(sqlite_insert_with_param, data_tuple)
         sqlite_connection.commit()
-        print("Переменные Python успешно вставлены в таблицу sqlite.db")
+        print("Переменные Python успешно вставлены в таблицу random_data.db")
 
         cursor.close()
 
