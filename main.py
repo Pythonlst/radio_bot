@@ -50,11 +50,15 @@ class Bot:
 
     async def start(self, update, context):
         self.user = update.effective_user
+        insert((update.message.chat.id, update.message.chat.first_name, update.message.chat.username,
+                update.message.date, update.message.from_user.language_code, update.message.text), table='users')
         await update.message.reply_html(
             rf"Привет {self.user.mention_html()}! я бот созданный для помощи в изучении радиоэлектроники, но я пока примитивен)",
             reply_markup=self.markup_btns)
 
     async def echo(self, update, context):
+        insert((update.message.chat.id, update.message.chat.first_name, update.message.chat.username,
+                update.message.date, update.message.from_user.language_code, update.message.text), table='users')
         await update.message.reply_text('я получил - ' + update.message.text)
 
     async def help(self, update, context):
@@ -79,14 +83,9 @@ class Bot:
     async def random_image(self, update, context):
         url = take_image('image')
         print(update)
-        print(context)
         print(update.message.chat.id)
+        await update.message.reply_text("лови картинку:")
         await context.bot.send_photo(update.message.chat.id, url)
-        #await update.message.reply_text(
-        #    "меме"
-        #)
-
-
 
 
 # врубаем все
