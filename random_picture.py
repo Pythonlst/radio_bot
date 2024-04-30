@@ -20,8 +20,8 @@ def take_image(type):
         else:
             with open('data/latest/latest_unsplash.json', 'w') as site:
                 json.dump(response_img, site, indent='    ', separators=(',', ': '))
-            insert(response_img['id'], response_img['slug'], response_img['updated_at'], response_img['description'],
-                   response_img['urls']['small'], response_img['links']['download'])
+            insert((response_img['id'], response_img['slug'], response_img['updated_at'], response_img['description'],
+                   response_img['urls']['small'], response_img['links']['download']), table='pictures')
             response_img = response_img['urls']['small']
             img = Image.open(BytesIO(requests.get(response_img).content))
             img.save('data/latest/latest.png', 'PNG')

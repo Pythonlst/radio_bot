@@ -1,23 +1,24 @@
 import sqlite3
 
 
-def insert(id, name, date, description, url, dowload):
+def insert(data, table=False, file_name='data/data.db'):
     try:
-        sqlite_connection = sqlite3.connect('data/random_data.db')
+        sqlite_connection = sqlite3.connect(file_name)
         cursor = sqlite_connection.cursor()
         print("Подключен к SQLite")
 
-        sqlite_insert_with_param = """CREATE TABLE IF NOT EXISTS 
-                                                    pictures(id, name, date, description, url, download);"""
-        cursor.execute(sqlite_insert_with_param)
-        sqlite_connection.commit()
-        sqlite_insert_with_param = '''INSERT INTO pictures(id, name, date, description, url, download)
-                                                                                VALUES(?, ?, ?, ?, ?, ?);'''
-        data_tuple = (id, name, date, description, url, dowload)
-        cursor.execute(sqlite_insert_with_param, data_tuple)
-        sqlite_connection.commit()
-        print("Переменные Python успешно вставлены в таблицу random_data.db")
+        if table == 'pictures':
+            param = 'id, name, date, description, url, download'
+        elif table == 'users':
+            param = 'id, nickname, username, date, language, last_send'
 
+        sqlite_insert_with_param = f"""CREATE TABLE IF NOT EXISTS {table}({param});"""
+        cursor.execute(sqlite_insert_with_param)
+        sqlite_insert_with_param = f'''INSERT INTO {table}({param}) 
+                    VALUES({', '.join(['?'] * len(param.split(',')))});'''
+        cursor.execute(sqlite_insert_with_param, data)
+        sqlite_connection.commit()
+        print(f"Переменные Python успешно вставлены в таблицу {file_name}")
         cursor.close()
 
     except sqlite3.Error as error:

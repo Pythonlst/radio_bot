@@ -3,10 +3,13 @@ import logging
 from telegram.ext import Application, MessageHandler, filters, CommandHandler, CallbackQueryHandler
 from telegram import ReplyKeyboardMarkup, InlineKeyboardMarkup, InlineKeyboardButton, request
 from random_picture import take_image
+from csv import insert
 
 
 class Bot:
     def __init__(self):
+        # объявляем переменные чтобы пипка не ругалась
+        self.user = None
         # настройка бота
         self.application = Application.builder().token('7098727755:AAHOKBBBIgYnudjOmHeu4_7RzkE4prgVkJs').build()
 
@@ -76,6 +79,7 @@ class Bot:
     async def random_image(self, update, context):
         url = take_image('image')
         print(update)
+        print(context)
         print(update.message.chat.id)
         await context.bot.send_photo(update.message.chat.id, url)
         #await update.message.reply_text(
