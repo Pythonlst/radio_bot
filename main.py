@@ -34,12 +34,13 @@ class Bot:
         # создание inline клавы
         inline_keyboard = [
             [InlineKeyboardButton('форум радиоэлектроников', url='https://go-radio.ru/start.html')],
+            [InlineKeyboardButton('форум с расширенным количеством схем', url='https://radioskot.ru')],
             [InlineKeyboardButton('канал про проектирование на ардуино Alex Giver', url='https://www.youtube.com/@AlexGyverShow')],
             [InlineKeyboardButton('канал про электронику HI-DEV', url='https://www.youtube.com/channel/UCY6A_tZAikULMr46WlfntRw')]
                            ]
         self.url_btns = InlineKeyboardMarkup(inline_keyboard)
 
-        # ковальски? - прости, сам не знаю, для показа инфы
+        # ковальски? - прости, сам не знаю, смотри инфу
         logging.basicConfig(
             format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO
         )
