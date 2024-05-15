@@ -10,6 +10,7 @@ class Bot:
     def __init__(self):
         # объявляем переменные чтобы пипка не ругалась
         self.user = None
+        self.drazn = False
         # настройка бота
         self.application = Application.builder().token('7098727755:AAHOKBBBIgYnudjOmHeu4_7RzkE4prgVkJs').build()
 
@@ -21,6 +22,7 @@ class Bot:
         self.application.add_handler(CommandHandler("open", self.open_keyboard))
         self.application.add_handler(CommandHandler("forum", self.open_site))
         self.application.add_handler(CommandHandler("random_image", self.random_image))
+        self.application.add_handler(CommandHandler("povtorialka", self.povtorialka))
 
         self.application.add_handler(CommandHandler("set_timer", self.set_timer))
         self.application.add_handler(CommandHandler("unset_timer", self.unset))
@@ -30,7 +32,7 @@ class Bot:
 
         # создание главной клавы
         self.btn_keyboard = [
-            ['/help', '/unset_timer'], ['/close', '/forum', '/random_image']
+            ['/help', '/unset_timer', '/povtorialka'], ['/close', '/forum', '/random_image']
         ]
         self.markup_btns = ReplyKeyboardMarkup(self.btn_keyboard, one_time_keyboard=False, resize_keyboard=True)
 
@@ -63,7 +65,12 @@ class Bot:
     async def echo(self, update, context):
         insert((update.message.chat.id, update.message.chat.first_name, update.message.chat.username,
                 update.message.date, update.message.from_user.language_code, update.message.text), table='users')
-        await update.message.reply_text('я получил - ' + update.message.text)
+        if self.drazn:
+            await update.message.reply_text('я получил - ' + update.message.text)
+
+    async def povtorialka(self, update, context):
+        self.drazn = not self.drazn
+        await update.message.reply_text('режим передразнивания переключен)')
 
     async def help(self, update, context):
         await update.message.reply_text('/set_timer мин час - ставит таймер, 2 аргумента обязательны')
